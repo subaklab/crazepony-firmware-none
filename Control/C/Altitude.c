@@ -61,7 +61,7 @@ void AltitudeCombineThread(void)
   dt = (tPre>0)?((t-tPre)/1000000.0f):0;
 	tPre=t;
 	//store err when sensor update 
-	if(Baro_ALT_Updated)	//后面应该在sensor数值后加一个timeStamp，判断是否更新
+	if(Baro_ALT_Updated)	//后面应该在sensor数值后加一个timeStamp，判断是否更新 //imeStamp should be added back in after a sensor value to determine whether to update
 	{
 			corr_baro = baro_offset - MS5611_Altitude - z_est[0];		// MS5611_Altitude baro alt, is postive above offset level. not in NED. z_est is in NED frame. 
 			Baro_ALT_Updated=0;

@@ -15,8 +15,8 @@ ReceiveData.c file
 编译环境：MDK-Lite  Version: 4.23
 初版时间: 2014-01-28
 功能：
-1.接收函数文件，包括接收2.4G数据，UART1的数据流
-2.解析数据包，分配给对应的控制量
+1.接收函数文件，包括接收2.4G数据，UART1的数据流 (Receive function files including 2.4G receiving data , UART1 data stream)
+2.解析数据包，分配给对应的控制量 (Analytical data packets corresponding to the amount allocated to the control)
 ------------------------------------
 */
 
@@ -48,7 +48,7 @@ extern uint32_t lastGetRCTime;
 //函数名：ReceiveDataFormNRF()
 //输入：无
 //输出: 无
-//描述：将收到的2.4G遥控数据赋值给对应的变量
+//描述：将收到的2.4G遥控数据赋值给对应的变量 (2.4G remote control data received will be assigned to the corresponding variable)
 //作者：马骏
 void ReceiveDataFormNRF(void)
 {
