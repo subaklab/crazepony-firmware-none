@@ -15,8 +15,8 @@ Battery.c file
 编译环境：MDK-Lite  Version: 4.23
 初版时间: 2014-01-28
 功能：
-1.电池检测AD初始化
-2.供低压检测用，提供片内温度传感器驱动
+1.电池检测AD初始化 //Battery testing AD initialization
+2.供低压检测用，提供片内温度传感器驱动 //For low-voltage detection , to provide on-chip temperature sensor driving
 ------------------------------------
 */
 
@@ -26,26 +26,26 @@ Battery.c file
 #include "CommApp.h"
 #include "ReceiveData.h"
 
-//实例化一个电压信息结构体
+//实例化一个电压信息结构体 //Examples of the structure of a voltage information
 Bat_Typedef Battery;
 
 
-//初始化电池检测ADC
-//开启ADC1的通道8	
+//初始化电池检测ADC //Initialization battery detection ADC
+//开启ADC1的通道8	 //Open ADC1 channel 8
 //BatteryCheck---->PB0
 void BatteryCheckInit()
 {
   
- //先初PB0为模拟输入
-  RCC->APB2ENR|=1<<3;    //使能PORTB口时钟 
-  GPIOB->CRL&=0XFFFFFFF0;//PB0	anolog输入
+ //先初PB0为模拟输入 //First PB0 first analog input
+  RCC->APB2ENR|=1<<3;    //使能PORTB口时钟 //Enable PORTB port Clock
+  GPIOB->CRL&=0XFFFFFFF0;//PB0	anolog输入 //PB0 anolog input
 	//通道8	 
-	RCC->APB2ENR|=1<<9;    //ADC1时钟使能	  
-	RCC->APB2RSTR|=1<<9;   //ADC1复位
-	RCC->APB2RSTR&=~(1<<9);//复位结束	    
-	RCC->CFGR&=~(3<<14);   //分频因子清零	
-	//SYSCLK/DIV2=12M ADC时钟设置为12M,ADC最大时钟不能超过14M!
-	//否则将导致ADC准确度下降! 
+	RCC->APB2ENR|=1<<9;    //ADC1时钟使能	//ADC1 Clock Enable  
+	RCC->APB2RSTR|=1<<9;   //ADC1复位 //ADC1 Reset
+	RCC->APB2RSTR&=~(1<<9);//复位结束	 //End Reset   
+	RCC->CFGR&=~(3<<14);   //分频因子清零	//Division factor cleared
+	//SYSCLK/DIV2=12M ADC时钟设置为12M,ADC最大时钟不能超过14M! //SYSCLK / DIV2 = 12M ADC clock is set to 12M, ADC clock can not exceed the maximum 14M!
+	//否则将导致ADC准确度下降! //Otherwise it will lead to decreased accuracy ADC!
 	RCC->CFGR|=2<<14;      	 
 	ADC1->CR1&=0XF0FFFF;   //工作模式清零
 	ADC1->CR1|=0<<16;      //独立工作模式  
