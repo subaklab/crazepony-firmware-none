@@ -1,4 +1,4 @@
-//高精度 气压计
+//高精度 气压计 //Precision barometer
 #include "config.h"
 #include "drv_ms5611.h"
 #include "delay.h"
@@ -44,7 +44,7 @@ uint32_t baroPressureSum = 0;
 int32_t BaroAlt = 0;
 
 
-//兼容小马
+//兼容小马 //Compatible pony
 #define i2cRead(_xaddr, _xreg, _xcnt, _xbuf) 	IICreadBytes(_xaddr, _xreg, _xcnt, _xbuf)
 bool i2cWrite(uint8_t addr_, uint8_t reg_, uint8_t data)
 {

@@ -248,17 +248,17 @@ const unsigned char dmpUpdates[MPU6050_DMP_UPDATES_SIZE] = {
     0x00,   0x60,   0x04,   0x00, 0x40, 0x00, 0x00
 };
 
-uint16_t dmpPacketSize;	 //FIFO数据	包字节数
-struct DMP_FIFO_map DMP_DATA; //FIFO的数据解析，参考头文件的结构体定义
+uint16_t dmpPacketSize;	 //FIFO数据	包字节数 //FIFO byte packets
+struct DMP_FIFO_map DMP_DATA; //FIFO的数据解析，参考头文件的结构体定义 //FIFO data analysis , structure is defined with reference to the header file
 
-//取两个数中最小的那个
+//取两个数中最小的那个 //Take the smallest of the two numbers
 uint8_t min(uint8_t x ,uint8_t y){
 	if( x < y)return x;
 	else return y;
 }
 
 
-//初始化DMP引擎
+//初始化DMP引擎 //DMP engine initialization
 uint8_t MPU6050_DMP_Initialize(void)
 {
 	uint8_t dmpUpdate[16], j;
@@ -268,8 +268,8 @@ uint8_t MPU6050_DMP_Initialize(void)
 	int8_t xgOffset	, ygOffset , zgOffset;
 	
     // reset device
-    //printf(("\r\n=======配置DMP引擎=========\r\n"));
-    //printf(("复位MPU6050...\r\n"));
+    //printf(("\r\n=======配置DMP引擎=========\r\n")); //Configuring DMP engine
+    //printf(("复位MPU6050...\r\n")); //reset
     MPU6050_reset();
     delay_ms(50); // wait after reset 50ms
     //printf(("禁止休眠模式...\r\n"));
@@ -452,14 +452,14 @@ void DMP_Routing(void)
 	        fifoCount -= dmpPacketSize;
 	
 			for(i=0 ; i < dmpPacketSize; i+=2) {
-				ptr[i]   = fifoBuffer[i+1];  //数据大小端的处理。
+				ptr[i]   = fifoBuffer[i+1];  //数据大小端的处理。//Data size side
 				ptr[i+1] = fifoBuffer[i];
 				}
-			DMP_Covert_Data(); //将FIFO的数据进行转换，并解出载体的三个姿态角
+			DMP_Covert_Data(); //将FIFO的数据进行转换，并解出载体的三个姿态角 //The FIFO data conversion, and solving the three attitude angles carrier
 			}	
 }
 
-// Fast inverse square-root	   快速计算 1/Sqrt(x) 		   
+// Fast inverse square-root	   快速计算 1/Sqrt(x) //Fast calculation		   
 float dmpinvSqrt(float x) {
 	float halfx = 0.5f * x;
 	float y = x;
@@ -487,26 +487,26 @@ float dmpsafe_asin(float v)
 	return asin(v);
 }
 
-//将从DMP读取到的FIFO数据 进行转换，得到载体的姿态角。并把传感器的ADC值转成标准单位。
+//将从DMP读取到的FIFO数据 进行转换，得到载体的姿态角。并把传感器的ADC值转成标准单位。//Read from the DMP FIFO data conversion, to give the attitude angle vector. And the ADC values ​​of the sensors turn into standard units.
 
 // void DMP_Covert_Data(void)
 // {
-// 	volatile float q[4] , norm ; // 四元数
+// 	volatile float q[4] , norm ; // 四元数 //Quaternion
 
-//   DMP_DATA.dmp_gyrox = ((float)DMP_DATA.GYROx)/16.4f;	//角速度 转成单位：rad/s
+//   DMP_DATA.dmp_gyrox = ((float)DMP_DATA.GYROx)/16.4f;	//角速度 转成单位：rad/s //Converted into units of angular velocity：rad/s
 // 	DMP_DATA.dmp_gyroy = ((float)DMP_DATA.GYROy)/16.4f;
 // 	DMP_DATA.dmp_gyroz = ((float)DMP_DATA.GYROz)/16.4f;
 //   
 // 	//acc sensitivity to +/-    4 g
-// 	DMP_DATA.dmp_accx = (((float)DMP_DATA.ACCx)/8192.0f)*g;	//加速度 转成单位： m/S^2
+// 	DMP_DATA.dmp_accx = (((float)DMP_DATA.ACCx)/8192.0f)*g;	//加速度 转成单位： m/S^2 //Acceleration convert units： m/S^2
 // 	DMP_DATA.dmp_accy = (((float)DMP_DATA.ACCy)/8192.0f)*g;
 // 	DMP_DATA.dmp_accz = (((float)DMP_DATA.ACCz)/8192.0f)*g;
 
-// 	  q[0] = (float)DMP_DATA.qw; 	//提取DMP的四元数
+// 	  q[0] = (float)DMP_DATA.qw; 	//提取DMP的四元数 //DMP extracted quaternion
 //   	q[1] = (float)DMP_DATA.qx;
 //   	q[2] = (float)DMP_DATA.qy;
 //   	q[3] = (float)DMP_DATA.qz;
-// 	// 四元数归一化
+// 	// 四元数归一化 //Quaternion normalization
 // 	norm = dmpinvSqrt(q[0]*q[0] + q[1]*q[1] + q[2]*q[2] + q[3]*q[3]);
 // 	q[0] = q[0] * norm;
 // 	q[1] = q[1] * norm;
@@ -527,23 +527,23 @@ float gyroy_val=0;
 
 
 void DMP_Covert_Data(void){
-	float  qtemp[4],norm ; // 四元数
+	float  qtemp[4],norm ; // 四元数 //Quaternion
   
-	// 注意，这里的计算原来是错误的，但因为 PID参数原因，暂时不改
-	//DMP_DATA.GYROx 即为直接的角度deg; 而非AD。  
+	// 注意，这里的计算原来是错误的，但因为 PID参数原因，暂时不改 //Note that the original calculation here is wrong, but because the PID parameter reasons, temporarily change
+	//DMP_DATA.GYROx 即为直接的角度deg; 而非AD。  //DMP_DATA.GYROx Is the direct angle deg; instead AD
 	DMP_DATA.dmp_gyrox = ((float)DMP_DATA.GYROx)/16.4f;	    //TOBE FIXED GYROx*M_PI_F/180.0f convert to rad/s
 	DMP_DATA.dmp_gyroy = ((float)DMP_DATA.GYROy)/16.4f;
 	DMP_DATA.dmp_gyroz = ((float)DMP_DATA.GYROz)/16.4f;
 	//acc sensitivity to +/-    4 g
-	DMP_DATA.dmp_accx = (((float)DMP_DATA.ACCx)/DMP_ACC_SCALE)*ONE_G;	//加速度 转成单位： m/S^2
+	DMP_DATA.dmp_accx = (((float)DMP_DATA.ACCx)/DMP_ACC_SCALE)*ONE_G;	//加速度 转成单位： m/S^2 //Acceleration convert units
 	DMP_DATA.dmp_accy = (((float)DMP_DATA.ACCy)/DMP_ACC_SCALE)*ONE_G;
 	DMP_DATA.dmp_accz = (((float)DMP_DATA.ACCz)/DMP_ACC_SCALE)*ONE_G;
   
-	qtemp[0] = (float)DMP_DATA.qw; 	//提取DMP的四元数
+	qtemp[0] = (float)DMP_DATA.qw; 	//提取DMP的四元数 //DMP extracted quaternion
 	qtemp[1] = (float)DMP_DATA.qx;
 	qtemp[2] = (float)DMP_DATA.qy;
 	qtemp[3] = (float)DMP_DATA.qz;
-	// 四元数归一化
+	// 四元数归一化 //Quaternion normalization
 	norm = dmpinvSqrt(qtemp[0]*qtemp[0] + qtemp[1]*qtemp[1] + qtemp[2]*qtemp[2] + qtemp[3]*qtemp[3]);
 	q[0] = qtemp[0] * norm;
 	q[1] = qtemp[1] * norm;
@@ -554,7 +554,7 @@ void DMP_Covert_Data(void){
 	                       1 - 2.0*(q[1]*q[1] + q[2]*q[2])))* 180/M_PI;
 	 // we let safe_asin() handle the singularities near 90/-90 in pitch
 	DMP_DATA.dmp_pitch = dmpsafe_asin(2.0*(q[0]*q[2] - q[3]*q[1]))* 180/M_PI;
-	//注意：此处计算反了，非右手系。
+	//注意：此处计算反了，非右手系。 //Note: This calculation backwards, non- right-handed
 	DMP_DATA.dmp_yaw = -atan2(2.0*(q[0]*q[3] + q[1]*q[2]),
 	                     1 - 2.0*(q[2]*q[2] + q[3]*q[3]))* 180/M_PI;
   #ifdef YAW_CORRECT
@@ -568,7 +568,7 @@ void DMP_Covert_Data(void){
 
 }
 
-//读取载体的姿态角 数组的顺序 航向  俯仰  滚转
+//读取载体的姿态角 数组的顺序 航向  俯仰  滚转 //Sequential read course carrier roll attitude angle array pitch
 void DMP_getYawPitchRoll(){
 	Q_ANGLE.Yaw =   DMP_DATA.dmp_yaw;
 	Q_ANGLE.Pitch = DMP_DATA.dmp_pitch; 
