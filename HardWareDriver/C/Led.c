@@ -15,8 +15,8 @@ led.c file
 编译环境：MDK-Lite  Version: 4.23
 初版时间: 2014-01-28
 功能：
-1.飞机四个臂上led IO口初始化
-2.初始化默认关闭所有LED灯
+1.飞机四个臂上led IO口初始化 //Four aircraft arm led IO port initialization
+2.初始化默认关闭所有LED灯  //LED lights all turned off by default initialization
 ------------------------------------
 */
 
@@ -25,43 +25,43 @@ led.c file
 #include "config.h"
 
 LED_t LEDCtrl;
-//接口显存
+//接口显存 //Memory Interface
 LEDBuf_t LEDBuf;
 
 
 /********************************************
-              Led初始化函数
+              Led初始化函数 //Led initialization function
 功能：
-1.配置Led接口IO输出方向
-2.关闭所有Led(开机默认方式)
-描述：
-Led接口：
+1.配置Led接口IO输出方向 //Led Interface Configuration IO output direction
+2.关闭所有Led(开机默认方式) //Close all Led (boot default)
+描述： //Description:
+Led接口： //Led Interface:
 Led1-->PA11
 Led2-->PA8
 Led3-->PB1
 Led4-->PB3
-对应IO=1，灯亮
+对应IO=1，灯亮 //Corresponding to the IO = 1, lights
 ********************************************/
 void LedInit(void)
 {
-    RCC->APB2ENR|=1<<2;    //使能PORTA时钟	
-    RCC->APB2ENR|=1<<3;    //使能PORTB时钟	
+    RCC->APB2ENR|=1<<2;    //使能PORTA时钟 //Enable PORTA clock	
+    RCC->APB2ENR|=1<<3;    //使能PORTB时钟 //Enable PORTB clock
 
-    RCC->APB2ENR|=1<<0;      //使能复用时钟	   
-    GPIOB->CRL&=0XFFFF0F0F;  //PB1,3推挽输出
+    RCC->APB2ENR|=1<<0;      //使能复用时钟 //Enable multiplexing clock   
+    GPIOB->CRL&=0XFFFF0F0F;  //PB1,3推挽输出 //3 push-pull output
     GPIOB->CRL|=0X00003030;
-    GPIOB->ODR|=5<<1;        //PB1,3上拉
+    GPIOB->ODR|=5<<1;        //PB1,3上拉 //3 Pull
   
-    GPIOA->CRH&=0XFFFF0FF0;  //PA8,11推挽输出
+    GPIOA->CRH&=0XFFFF0FF0;  //PA8,11推挽输出 //11 push-pull output
     GPIOA->CRH|=0X00003003;
-    GPIOA->ODR|=9<<0;        //PA1,11上拉
+    GPIOA->ODR|=9<<0;        //PA1,11上拉 //11 Pull
   
-    AFIO->MAPR|=2<<24;      //关闭JATG,千万不能将SWD也关闭，否则芯片作废，亲测!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    AFIO->MAPR|=2<<24;      //关闭JATG,千万不能将SWD也关闭，否则芯片作废，亲测!!!!!!!!!!!!!!!!!!!!!!!!!!!! //Close JATG, SWD also must not be closed, otherwise the chip void, pro-test !!!!!!!!!!!!!!!!!!!!!!!!!!!!
     LedA_off;LedB_off;LedC_off;LedD_off;
-  //  printf("状态LED灯初始化完成...\r\n");
+  //  printf("状态LED灯初始化完成...\r\n"); //Status LED initialization is complete
 }
 
-//底层更新 ，10Hz
+//底层更新 ，10Hz //Underlying Update
 void LEDReflash(void)
 {
  
@@ -92,7 +92,7 @@ void LEDReflash(void)
 // 			LedD_off;
 }
 
-//事件驱动层
+//事件驱动层 //Event-driven layer
 void LEDFSM(void)
 {
 //	static uint16_t cnt=0;

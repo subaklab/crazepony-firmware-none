@@ -15,9 +15,9 @@ HMC5883.c file
 编译环境：MDK-Lite  Version: 4.23
 初版时间: 2014-01-28
 功能：
-1.初始化电子罗盘HMC5883
-2.在目前的4.1板上面，这个芯片是默认没焊接··
-3.调试通过，之所以没接，因为原理图上，IIC 的数据线和时钟线画反了，如果各位有兴趣搞这个芯片，可以联系我，我告诉大家怎么跳线了啦~~
+1.初始化电子罗盘HMC5883 //Initialize the electronic compass HMC5883
+2.在目前的4.1板上面，这个芯片是默认没焊接·· //In the current 4.1 above board, the chip is the default, no welding ·
+3.调试通过，之所以没接，因为原理图上，IIC 的数据线和时钟线画反了，如果各位有兴趣搞这个芯片，可以联系我，我告诉大家怎么跳线了啦~~ //Debugging through, why did not answer, because on the schematic, IIC data and clock lines drawn backwards, if you are interested to engage in this chip, you can contact me, let me tell you how the jumper friends ~ ~
 ------------------------------------
 */
 
@@ -26,15 +26,15 @@ HMC5883.c file
 
 float HMC5883_lastx,HMC5883_lasty,HMC5883_lastz;
 
-int16_t  HMC5883_FIFO[3][11]; //磁力计滤波
+int16_t  HMC5883_FIFO[3][11]; //磁力计滤波 //Magnetometer filter
 void 	HMC58X3_getRaw(int16_t *x,int16_t *y,int16_t *z);
 
 /**************************实现函数********************************************
 *函数原型:	   unsigned char HMC5883_IS_newdata(void)
-*功　　能:	   读取DRDY 引脚，判断是否完成了一次转换
+*功　　能:	   读取DRDY 引脚，判断是否完成了一次转换 //Read DRDY pin determines whether to complete a conversion
  Low for 250 μsec when data is placed in the data output registers. 
-输入参数：  无
-输出参数：  如果完成转换，则输出1  否则输出 0
+输入参数：  无 //No
+输出参数：  如果完成转换，则输出1  否则输出 0 //If the conversion is complete, the output 1 or output 0
 *******************************************************************************/
 unsigned char HMC5883_IS_newdata(void)
 {
@@ -46,7 +46,7 @@ unsigned char HMC5883_IS_newdata(void)
 
 /**************************实现函数********************************************
 *函数原型:	   void HMC58X3_FIFO_init(void)
-*功　　能:	   连续读取100次数据，以初始化FIFO数组
+*功　　能:	   连续读取100次数据，以初始化FIFO数组 //Sequential read data 100, to initialize the FIFO array
 输入参数：  无
 输出参数：  无
 *******************************************************************************/
@@ -56,14 +56,14 @@ void HMC58X3_FIFO_init(void)
   unsigned char i;
   for(i=0;i<50;i++){
   HMC58X3_getRaw(&temp[0],&temp[1],&temp[2]);
-  delay_us(200);  //延时再读取数据
+  delay_us(200);  //延时再读取数据 //Delay and then read data
   }
 }
 
 /**************************实现函数********************************************
 *函数原型:	   void  HMC58X3_newValues(int16_t x,int16_t y,int16_t z)
-*功　　能:	   更新一组数据到FIFO数组
-输入参数：  磁力计三个轴对应的ADC值
+*功　　能:	   更新一组数据到FIFO数组 //Update a set of data to FIFO array
+输入参数：  磁力计三个轴对应的ADC值 //Three-axis magnetometer corresponding ADC value
 输出参数：  无
 *******************************************************************************/
 void  HMC58X3_newValues(int16_t x,int16_t y,int16_t z)
@@ -82,10 +82,10 @@ void  HMC58X3_newValues(int16_t x,int16_t y,int16_t z)
 	HMC5883_FIFO[2][9]=z;
 
 	sum=0;
-	for(i=0;i<10;i++){	//取数组内的值进行求和再取平均
+	for(i=0;i<10;i++){	//取数组内的值进行求和再取平均 //Takes a value within the array are summed and then averaged
    		sum+=HMC5883_FIFO[0][i];
 	}
-	HMC5883_FIFO[0][10]=sum/10;	//将平均值更新
+	HMC5883_FIFO[0][10]=sum/10;	//将平均值更新 //The average value update
 
 	sum=0;
 	for(i=0;i<10;i++){
@@ -102,9 +102,9 @@ void  HMC58X3_newValues(int16_t x,int16_t y,int16_t z)
 
 /**************************实现函数********************************************
 *函数原型:	   void HMC58X3_writeReg(unsigned char reg, unsigned char val)
-*功　　能:	   写HMC5883L的寄存器
-输入参数：    reg  寄存器地址
-			  val   要写入的值	
+*功　　能:	   写HMC5883L的寄存器 //Write HMC5883L register
+输入参数：    reg  寄存器地址 //Register Address
+			  val   要写入的值	 //Value to be written
 输出参数：  无
 *******************************************************************************/
 void HMC58X3_writeReg(unsigned char reg, unsigned char val) {
@@ -113,9 +113,9 @@ void HMC58X3_writeReg(unsigned char reg, unsigned char val) {
 
 /**************************实现函数********************************************
 *函数原型:	  void HMC58X3_getRaw(int16_t *x,int16_t *y,int16_t *z)
-*功　　能:	   写HMC5883L的寄存器
-输入参数：    reg  寄存器地址
-			  val   要写入的值	
+*功　　能:	   写HMC5883L的寄存器 //Write HMC5883L register
+输入参数：    reg  寄存器地址 //Register Address
+			  val   要写入的值	 //Value to be written
 输出参数：  无
 *******************************************************************************/
 void HMC58X3_getRaw(int16_t *x,int16_t *y,int16_t *z) {
@@ -130,8 +130,8 @@ void HMC58X3_getRaw(int16_t *x,int16_t *y,int16_t *z) {
 
 /**************************实现函数********************************************
 *函数原型:	  void HMC58X3_getValues(int16_t *x,int16_t *y,int16_t *z)
-*功　　能:	   读取 磁力计的当前ADC值
-输入参数：    三个轴对应的输出指针	
+*功　　能:	   读取 磁力计的当前ADC值 //Read magnetometer current ADC value
+输入参数：    三个轴对应的输出指针	 //Three axes corresponding output pointer
 输出参数：  无
 *******************************************************************************/
 void HMC58X3_getlastValues(int16_t *x,int16_t *y,int16_t *z) {
@@ -142,8 +142,8 @@ void HMC58X3_getlastValues(int16_t *x,int16_t *y,int16_t *z) {
 
 /**************************实现函数********************************************
 *函数原型:	  void HMC58X3_mgetValues(float *arry)
-*功　　能:	   读取 校正后的 磁力计ADC值
-输入参数：    输出数组指针	
+*功　　能:	   读取 校正后的 磁力计ADC值 //Magnetometer ADC value read after correction
+输入参数：    输出数组指针	 //Output array pointer
 输出参数：  无
 *******************************************************************************/
 void HMC58X3_mgetValues(float *arry) {
@@ -156,8 +156,8 @@ void HMC58X3_mgetValues(float *arry) {
 
 /**************************实现函数********************************************
 *函数原型:	  void HMC58X3_setGain(unsigned char gain)
-*功　　能:	   设置 5883L的增益
-输入参数：     目标增益 0-7
+*功　　能:	   设置 5883L的增益 //Set 5883L gain
+输入参数：     目标增益 0-7 //The target gain 0-7
 输出参数：  无
 *******************************************************************************/
 void HMC58X3_setGain(unsigned char gain) { 
@@ -168,8 +168,8 @@ void HMC58X3_setGain(unsigned char gain) {
 
 /**************************实现函数********************************************
 *函数原型:	   void HMC58X3_setMode(unsigned char mode)
-*功　　能:	   设置 5883L的工作模式
-输入参数：     模式
+*功　　能:	   设置 5883L的工作模式 //Set 5883L operating mode
+输入参数：     模式 //Mode
 输出参数：     无
 *******************************************************************************/
 void HMC58X3_setMode(unsigned char mode) {
@@ -182,8 +182,8 @@ void HMC58X3_setMode(unsigned char mode) {
 
 /**************************实现函数********************************************
 *函数原型:	   void HMC58X3_init(u8 setmode)
-*功　　能:	   设置 5883L的工作模式
-输入参数：     模式
+*功　　能:	   设置 5883L的工作模式 //Set 5883L operating mode
+输入参数：     模式 //Mode
 输出参数：     无
 *******************************************************************************/
 void HMC58X3_init(u8 setmode) {
@@ -199,8 +199,8 @@ void HMC58X3_init(u8 setmode) {
 
 /**************************实现函数********************************************
 *函数原型:	  void HMC58X3_setDOR(unsigned char DOR)
-*功　　能:	   设置 5883L的 数据输出速率
-输入参数：     速率值
+*功　　能:	   设置 5883L的 数据输出速率 //Setting the data output rate 5883L
+输入参数：     速率值 //Rate value
 0 -> 0.75Hz  |   1 -> 1.5Hz
 2 -> 3Hz     |   3 -> 7.5Hz
 4 -> 15Hz    |   5 -> 30Hz
@@ -214,8 +214,8 @@ void HMC58X3_setDOR(unsigned char DOR) {
 
 /**************************实现函数********************************************
 *函数原型:	  void HMC58X3_getID(char id[3])
-*功　　能:	  读取芯片的ID
-输入参数：    ID存放的数组
+*功　　能:	  读取芯片的ID //Read the chip's ID
+输入参数：    ID存放的数组 //ID storage array
 输出参数：  无
 *******************************************************************************/
 void HMC58X3_getID(char id[3]) 
@@ -227,20 +227,18 @@ void HMC58X3_getID(char id[3])
 
 /**************************实现函数********************************************
 *函数原型:	  void HMC5883_Check()
-*功　　能:	  检测HMC5883是否已连接
+*功　　能:	  检测HMC5883是否已连接 //Detecting whether HMC5883 connected
 输入参数：    
 输出参数：    
 *******************************************************************************/
 void HMC5883_Check() 
 {
   char ID_temp[3];
-  HMC58X3_getID(&ID_temp[0]); //对ID临时数组赋值
+  HMC58X3_getID(&ID_temp[0]); //对ID临时数组赋值 //Temporary array of ID assignment
   
   if((ID_temp[0]==0x48)&&(ID_temp[1]==0x34)&&(ID_temp[2]==0x33))//HMC的固定ID号为三个字节，16进制表示分别为48,34,33
-  printf("已检测到电子罗盘HMC5883L...\r\n");
-  else printf("未检测到电子罗盘HMC5883L...\r\n");
-  
-  
+  printf("已检测到电子罗盘HMC5883L...\r\n"); //We have detected an electronic compass HMC5883L
+  else printf("未检测到电子罗盘HMC5883L...\r\n"); //Not detected electronic compass HMC5883L
 }   
 
 
