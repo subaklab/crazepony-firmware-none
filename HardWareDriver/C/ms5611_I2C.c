@@ -188,7 +188,7 @@ void calculateTemperature(void)
 
 void calculatePressureAltitude(void)
 {
-	float pressureAlt50Hz;	//最后计算得到的高度值
+	float pressureAlt50Hz;	//最后计算得到的高度值 //Finally, the calculated height
 
 	int64_t offset;
 	int64_t offset2 = 0;
@@ -245,7 +245,7 @@ void initPressure(void)
     uint8_t data[2];
 
     ms5611I2C = I2C1;
-    ms5611Address = 0xEE;	 //0XEE为MS5611的八位地址，0X77为MS5611的七位地址，IIC读写函数输入参数为八位地址
+    ms5611Address = 0xEE;	 //0XEE为MS5611的八位地址，0X77为MS5611的七位地址，IIC读写函数输入参数为八位地址 //0XEE to address MS5611's eight, 0X77 address for the seven MS5611's, IIC write function of the input parameters for the eight address
 
 		DBG_PRINT("init pressure MS5611\n");
 	

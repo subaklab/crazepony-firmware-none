@@ -15,8 +15,8 @@ mpu6050.c file
 编译环境：MDK-Lite  Version: 4.23
 初版时间: 2014-01-28
 功能：
-1.飞机姿态传感器初始化
-2.硬件上的数据中断int脚已连接，软件是轮训机制，大家可以在这方面做修改
+1.飞机姿态传感器初始化 //Aircraft attitude sensor initialization
+2.硬件上的数据中断int脚已连接，软件是轮训机制，大家可以在这方面做修改 //Int data hardware interrupt pin is connected, the software is the rotation mechanism, we can make changes in this regard
 ------------------------------------
 */
 #include "MPU6050.h"
@@ -50,9 +50,9 @@ int16_t Gx_offset=0,Gy_offset=0,Gz_offset=0;
 
 /**************************实现函数********************************************
 *函数原型:		unsigned char MPU6050_is_DRY(void)
-*功　　能:	    检查 MPU6050的中断引脚，测试是否完成转换
-返回 1  转换完成
-0 数据寄存器还没有更新
+*功　　能:	    检查 MPU6050的中断引脚，测试是否完成转换 //Check MPU6050 interrupt pin, the test is complete conversion
+返回 1  转换完成 //The conversion is complete
+0 数据寄存器还没有更新 //Data register has not been updated
 *******************************************************************************/
 unsigned char MPU6050_is_DRY(void){
     if(GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_5)==Bit_SET){
@@ -63,7 +63,7 @@ unsigned char MPU6050_is_DRY(void){
 
 /**************************实现函数********************************************
 *函数原型:		void MPU6050_setClockSource(uint8_tsource)
-*功　　能:	    设置  MPU6050 的时钟源
+*功　　能:	    设置  MPU6050 的时钟源 //Set MPU6050 clock source
  * CLK_SEL | Clock Source
  * --------+--------------------------------------
  * 0       | Internal oscillator
@@ -103,7 +103,7 @@ void MPU6050_setFullScaleGyroRange(uint8_t range) {
 
 /**************************实现函数********************************************
 *函数原型:		void MPU6050_setFullScaleAccelRange(uint8_trange)
-*功　　能:	    设置  MPU6050 加速度计的最大量程
+*功　　能:	    设置  MPU6050 加速度计的最大量程 //Set MPU6050 accelerometer maximum range
 *******************************************************************************/
 void MPU6050_setFullScaleAccelRange(uint8_t range) {
     IICwriteBits(devAddr, MPU6050_RA_ACCEL_CONFIG, MPU6050_ACONFIG_AFS_SEL_BIT, MPU6050_ACONFIG_AFS_SEL_LENGTH, range);
@@ -111,9 +111,9 @@ void MPU6050_setFullScaleAccelRange(uint8_t range) {
 
 /**************************实现函数********************************************
 *函数原型:		void MPU6050_setSleepEnabled(uint8_tenabled)
-*功　　能:	    设置  MPU6050 是否进入睡眠模式
-				enabled =1   睡觉
-			    enabled =0   工作
+*功　　能:	    设置  MPU6050 是否进入睡眠模式 //Set MPU6050 whether to enter a sleep mode
+				enabled =1   睡觉 //Go to bed
+			    enabled =0   工作 //Jobs
 *******************************************************************************/
 void MPU6050_setSleepEnabled(uint8_t enabled) {
     IICwriteBit(devAddr, MPU6050_RA_PWR_MGMT_1, MPU6050_PWR1_SLEEP_BIT, enabled);
@@ -121,7 +121,7 @@ void MPU6050_setSleepEnabled(uint8_t enabled) {
 
 /**************************实现函数********************************************
 *函数原型:		uint8_tMPU6050_getDeviceID(void)
-*功　　能:	    读取  MPU6050 WHO_AM_I 标识	 将返回 0x68
+*功　　能:	    读取  MPU6050 WHO_AM_I 标识	 将返回 0x68 //Read MPU6050 WHO_AM_I logo will return 0x68
 *******************************************************************************/
 uint8_t MPU6050_getDeviceID(void) {
 
@@ -131,7 +131,7 @@ uint8_t MPU6050_getDeviceID(void) {
 
 /**************************实现函数********************************************
 *函数原型:		uint8_tMPU6050_testConnection(void)
-*功　　能:	    检测MPU6050 是否已经连接
+*功　　能:	    检测MPU6050 是否已经连接 //Detecting whether MPU6050 connected
 *******************************************************************************/
 uint8_t MPU6050_testConnection(void) {
    if(MPU6050_getDeviceID() == 0x68)  //0b01101000;
@@ -141,7 +141,7 @@ uint8_t MPU6050_testConnection(void) {
 
 /**************************实现函数********************************************
 *函数原型:		void MPU6050_setI2CMasterModeEnabled(uint8_tenabled)
-*功　　能:	    设置 MPU6050 是否为AUX I2C线的主机
+*功　　能:	    设置 MPU6050 是否为AUX I2C线的主机 //Set MPU6050 whether the AUX I2C line host
 *******************************************************************************/
 void MPU6050_setI2CMasterModeEnabled(uint8_t enabled) {
     IICwriteBit(devAddr, MPU6050_RA_USER_CTRL, MPU6050_USERCTRL_I2C_MST_EN_BIT, enabled);
@@ -149,7 +149,7 @@ void MPU6050_setI2CMasterModeEnabled(uint8_t enabled) {
 
 /**************************实现函数********************************************
 *函数原型:		void MPU6050_setI2CBypassEnabled(uint8_tenabled)
-*功　　能:	    设置 MPU6050 是否为AUX I2C线的主机
+*功　　能:	    设置 MPU6050 是否为AUX I2C线的主机 //Set MPU6050 whether the AUX I2C line host
 *******************************************************************************/
 void MPU6050_setI2CBypassEnabled(uint8_t enabled) {
     IICwriteBit(devAddr, MPU6050_RA_INT_PIN_CFG, MPU6050_INTCFG_I2C_BYPASS_EN_BIT, enabled);
@@ -157,21 +157,21 @@ void MPU6050_setI2CBypassEnabled(uint8_t enabled) {
 
 /**************************实现函数********************************************
 *函数原型:		void MPU6050_Check()
-*功　　能:	  检测IIC总线上的MPU6050是否存在
+*功　　能:	  检测IIC总线上的MPU6050是否存在 //MPU6050 detect the existence of IIC bus
 *******************************************************************************/
 void MPU6050_Check(void) 
 { 
   switch(MPU6050_testConnection())
   {
-    case 0:printf("未检测到MPU6050...\r\n");
+    case 0:printf("未检测到MPU6050...\r\n"); //Not detected MPU6050
       break;
-    case 1:printf("已检测到MPU6050...\r\n");
+    case 1:printf("已检测到MPU6050...\r\n"); //We have detected MPU6050
       break;
   }
 } 
 /**************************实现函数********************************************
 *函数原型:		void MPU6050_initialize(void)
-*功　　能:	    初始化 	MPU6050 以进入可用状态。
+*功　　能:	    初始化 	MPU6050 以进入可用状态。 //Initialization MPU6050 to become available
 *******************************************************************************/
 void MPU6050_initialize(void) {
 	//int16_t temp[6];
@@ -202,7 +202,7 @@ void MPU6050_initialize(void) {
 
 
 }
-//读acc
+//读acc //Read acc
 void MPU6050AccRead(int16_t *accData)
 {
     uint8_t buf[6];
@@ -214,7 +214,7 @@ void MPU6050AccRead(int16_t *accData)
 
 
 }
-//读gyro
+//读gyro //Read gyro
 void MPU6050GyroRead(int16_t *gyroData)
 {
     uint8_t buf[6];
@@ -226,7 +226,7 @@ void MPU6050GyroRead(int16_t *gyroData)
 }
 
 
-//用于校准 DMP的偏置值
+//用于校准 DMP的偏置值 // Offset values for calibration of DMP
 void MPU6050_setAccOffset(int16_t offset[3])
 {
 		uint8_t buf[2],i=0;
