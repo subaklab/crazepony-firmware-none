@@ -15,21 +15,21 @@ Tim.c file
 编译环境：MDK-Lite  Version: 4.23
 初版时间: 2014-01-28
 功能：
-1.初始化定时器3和定时器4
-2.定时器3-->串口打印各种参数（生产调试使用，默认情况下串口输出上位机数据）
-3.定时器4-->飞控主循环基准定时器，属于关键中断，将定时器4的主优先级以及从优先级设为最高很有必要
+1.初始化定时器3和定时器4 //Initialization timer 3 and 4
+2.定时器3-->串口打印各种参数（生产调试使用，默认情况下串口输出上位机数据）//Timer 3 -> serial printer parameters (production debugging use, by default, the PC serial output data)
+3.定时器4-->飞控主循环基准定时器，属于关键中断，将定时器4的主优先级以及从优先级设为最高很有必要 //Timer 4 -> Flight Control main loop reference timer, are critical interrupt, timer, and the main priority 4 is necessary from the highest priority to
 ------------------------------------
 */
 #include "tim.h"
 #include "config.h"
 #include "imu.h"
 
-#define TASK_TICK_FREQ				1000			//Hz 主任务频率
+#define TASK_TICK_FREQ				1000			//Hz 主任务频率 //Hz main task frequency
 
 uint16_t cntBaro=0;
 uint16_t cntBatChk=0;
 
-int LedCounter;//LED闪烁计数值
+int LedCounter;//LED闪烁计数值 //LED Blink count
 float Compass_HMC[3];
 
 uint8_t accUpdated=0;
@@ -38,8 +38,8 @@ uint8_t  loop500HzFlag,loop200HzFlag,loop50HzFlag,loop600HzFlag,loop100HzFlag,lo
 volatile uint16_t loop500Hzcnt,loop200HzCnt,loop50HzCnt , loop600HzCnt,loop100HzCnt, loop20HzCnt , loop10HzCnt=0;
 
 
-//控制入口
-void TIM4_IRQHandler(void)		//1ms中断一次
+//控制入口 //Controls entry
+void TIM4_IRQHandler(void)		//1ms中断一次 //1ms interrupt time
 {
     if( TIM_GetITStatus(TIM4 , TIM_IT_Update) != RESET ) 
     {     
@@ -63,21 +63,21 @@ void TIM4_IRQHandler(void)		//1ms中断一次
 							loop10HzFlag=1;
 					}
           
-          TIM_ClearITPendingBit(TIM4 , TIM_FLAG_Update);   //清除中断标志   
+          TIM_ClearITPendingBit(TIM4 , TIM_FLAG_Update);   //清除中断标志  //Clear the interrupt flag 
     }
 }
 
 
 
-int DebugCounter;             //打印信息输出时间间隔计数值
+int DebugCounter;             //打印信息输出时间间隔计数值 //Print information output time interval counter value
 
 
-void TIM3_IRQHandler(void)		//打印中断服务程序
+void TIM3_IRQHandler(void)		//打印中断服务程序 //Print the interrupt service routine
 {	
     if( TIM_GetITStatus(TIM3 , TIM_IT_Update) != RESET ) 
     {     
-			Battery.BatteryAD  = GetBatteryAD();            //电池电压检测  
-			Battery.BatteryVal = Battery.Bat_K * (Battery.BatteryAD/4096.0) * Battery.ADRef;//实际电压 值计算
+			Battery.BatteryAD  = GetBatteryAD();            //电池电压检测  //Battery voltage detection
+			Battery.BatteryVal = Battery.Bat_K * (Battery.BatteryAD/4096.0) * Battery.ADRef;//实际电压 值计算 //The actual voltage value calculation
       DebugCounter++;
       if( DebugCounter==500)
             {
@@ -109,27 +109,27 @@ void TIM3_IRQHandler(void)		//打印中断服务程序
             printf(" Altitude ---> %5.2f M\r\n",(float)MS5611_Altitude);
             printf(" Temperature---> %5.2f C\r\n",(float)MS5611_Temperature);
 						printf("====================================\r\n");
-						//根据采集到的AD值，计算实际电压。硬件上是对电池进行分压后给AD采集的，所以结果要乘以2
+						//根据采集到的AD值，计算实际电压。硬件上是对电池进行分压后给AD采集的，所以结果要乘以2 //According to the collected AD value to calculate the actual voltage. After the hardware is the battery voltage divider to AD collected, so the result is multiplied by 2
             printf(" Battery Voltage---> %3.2fv\r\n",Battery.BatteryVal);
             printf("====================================\r\n");
         }
-        TIM_ClearITPendingBit(TIM3 , TIM_FLAG_Update);   //清除中断标志   
+        TIM_ClearITPendingBit(TIM3 , TIM_FLAG_Update);   //清除中断标志 //Clear the interrupt flag  
     }
 }
 
 
 
-//定时器4初始化：用来中断处理PID
+//定时器4初始化：用来中断处理PID //Timer 4 Initialization: used to interrupt the process PID
 void TIM4_Init(char clock,int Preiod)
 {
     TIM_TimeBaseInitTypeDef TIM_TimeBaseStructure;
 
-    RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM4,ENABLE);  //打开时钟
+    RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM4,ENABLE);  //打开时钟 //Open the Clock
     
     TIM_DeInit(TIM4);
 
     TIM_TimeBaseStructure.TIM_Period = Preiod;
-    TIM_TimeBaseStructure.TIM_Prescaler = clock-1;//定时1ms
+    TIM_TimeBaseStructure.TIM_Prescaler = clock-1;//定时1ms //Timing 1ms
     TIM_TimeBaseStructure.TIM_ClockDivision = TIM_CKD_DIV1; 
     TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;
     
@@ -138,22 +138,22 @@ void TIM4_Init(char clock,int Preiod)
 
     TIM_ITConfig(TIM4,TIM_IT_Update,ENABLE);
     TIM_Cmd(TIM4,ENABLE);
-    printf("定时器4初始化完成...\r\n");
+    printf("定时器4初始化完成...\r\n"); //Timer 4 initialization is complete
     
 }	
 
 
-//定时器3初始化
+//定时器3初始化 //Timer 3 initialization
 void TIM3_Init(char clock,int Preiod)
 {
     TIM_TimeBaseInitTypeDef TIM_TimeBaseStructure;
 
-    RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM3,ENABLE);  //打开时钟
+    RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM3,ENABLE);  //打开时钟 //Open the Clock
     
     TIM_DeInit(TIM3);
 
     TIM_TimeBaseStructure.TIM_Period = Preiod;
-    TIM_TimeBaseStructure.TIM_Prescaler = clock-1;//定时1ms
+    TIM_TimeBaseStructure.TIM_Prescaler = clock-1;//定时1ms //Timing 1ms
     TIM_TimeBaseStructure.TIM_ClockDivision = TIM_CKD_DIV1; 
     TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;
     
@@ -163,7 +163,7 @@ void TIM3_Init(char clock,int Preiod)
     TIM_ITConfig(TIM3,TIM_IT_Update,ENABLE);
     TIM_Cmd(TIM3,ENABLE);
   
-    printf("定时器3初始化完成...\r\n");
+    printf("定时器3初始化完成...\r\n"); //Timer 3 initialization is complete
 }		
 
 
@@ -175,13 +175,13 @@ void TimerNVIC_Configuration()
     NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);
     //TIM3
     NVIC_InitStructure.NVIC_IRQChannel = TIM3_IRQn;
-    NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 2;//串口打印定时器，优先级低于姿态解算
+    NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 2;//串口打印定时器，优先级低于姿态解算 //Serial print timer, a lower priority than solving attitude
     NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
     NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
     NVIC_Init(&NVIC_InitStructure);
     //TIM4
     NVIC_InitStructure.NVIC_IRQChannel = TIM4_IRQn;
-    NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 1;//飞控主循环基准定时器，优先级高于串口打印
+    NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 1;//飞控主循环基准定时器，优先级高于串口打印 //Primary flight control loop reference timer, a higher priority than a serial printer
     NVIC_InitStructure.NVIC_IRQChannelSubPriority = 1;
     NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
     NVIC_Init(&NVIC_InitStructure);
